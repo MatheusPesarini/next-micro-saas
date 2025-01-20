@@ -2,11 +2,11 @@
 
 ## 1. Configuração do Ambiente
 
-- [ ] Inicializar um novo projeto Next.js.
-- [ ] Configurar TypeScript no projeto.
+- [x] Inicializar um novo projeto Next.js.
+- [x] Configurar TypeScript no projeto.
 - [ ] Instalar Tailwind CSS e configurar o arquivo de configuração `tailwind.config.js`.
-- [ ] Configurar Prisma para conectar ao banco de dados PostgreSQL.
-- [ ] Criar variáveis de ambiente (`.env`) para armazenar credenciais e URLs do banco de dados.
+- [x] Configurar Prisma para conectar ao banco de dados PostgreSQL.
+- [x] Criar variáveis de ambiente (`.env`) para armazenar credenciais e URLs do banco de dados.
 
 ## 2. Definição do Banco de Dados
 
