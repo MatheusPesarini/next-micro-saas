@@ -2,7 +2,7 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
 
-import { userRoutes } from "./routes/get-user/user";
+import { userRoutes } from "./routes/get-user-DEPRECATED/user";
 
 const fastify = Fastify({ logger: true });
 
