@@ -1,21 +1,23 @@
+"use client";
+
 export default function Register() {
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
 		const formData = new FormData(event.currentTarget);
-		const response = await fetch("http://localhost:3000/register", {
+		const data = Object.fromEntries(formData.entries());
+
+		const response = await fetch("http://localhost:3001/register", {
 			method: "POST",
 			cache: "no-cache",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({
-				body: formData,
-			}),
+			body: JSON.stringify(data),
 		});
 
-		const data = await response.json();
-		console.log(data);
+		const result = await response.json();
+		console.log(result);
 	}
 
 	return (

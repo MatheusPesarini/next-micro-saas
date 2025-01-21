@@ -10,7 +10,7 @@ const loginUserSchema = z.object({
 	password: z.string().min(1),
 });
 
-export default async function userRoutes(fastify: FastifyInstance) {
+export default async function loginUserRoutes(fastify: FastifyInstance) {
 	fastify.post("/login", async (request, reply) => {
 		const result = loginUserSchema.safeParse(request.body);
 

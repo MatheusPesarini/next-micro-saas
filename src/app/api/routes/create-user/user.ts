@@ -11,7 +11,7 @@ const createUserSchema = z.object({
 	password: z.string().min(1),
 });
 
-export default async function userRoutes(fastify: FastifyInstance) {
+export default async function createUserRoutes(fastify: FastifyInstance) {
 	fastify.post("/register", async (request, reply) => {
 		const result = createUserSchema.safeParse(request.body);
 
