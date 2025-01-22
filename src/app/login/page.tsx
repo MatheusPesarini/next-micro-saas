@@ -24,7 +24,7 @@ export default function Login() {
 		<div>
 			<h1>Login</h1>
 			<form onSubmit={handleSubmit}>
-				<input type="email" placeholder="Digite seu e-mail" name="email" />
+				<input type="email" placeholder="Digite seu e-mail" name="email" className="text-black"/>
 				<input type="password" placeholder="Digite sua senha" name="password" />
 				<button type="submit">Logar</button>
 			</form>
