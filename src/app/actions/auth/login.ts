@@ -1,6 +1,6 @@
-"use server";
+import { LoginFormSchema, type FormState } from "@/app/lib/auth/definitions";
 
-export async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+export async function handleSubmit(state: FormState ,formData: FormData) {
 	event.preventDefault();
 
 	const formData = new FormData(event.currentTarget);

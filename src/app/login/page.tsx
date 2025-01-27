@@ -4,7 +4,7 @@ export default function Login() {
 	return (
 		<div>
 			<h1>Login</h1>
-			<form onSubmit={handleSubmit} className="flex flex-col items-center">
+			<form action={handleSubmit} className="flex flex-col items-center">
 				<input
 					type="email"
 					placeholder="Digite seu e-mail"
