@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "api": "tsx src/api/index.ts",
+    "api": "tsx api/index.ts",
     "lint": "biome check ./src"
   },
   "prisma": {

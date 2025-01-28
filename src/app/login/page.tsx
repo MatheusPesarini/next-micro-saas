@@ -1,7 +1,11 @@
 "use client";
 
 import { handleSubmit } from "../actions/auth/login";
-import { useActionState } from "react";
+import { useActionState, useOptimistic } from "react";
+
+type Message = {
+	message: string;
+};
 
 export default function Login() {
 	const [state, action, pending] = useActionState(handleSubmit, undefined);

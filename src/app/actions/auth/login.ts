@@ -2,6 +2,7 @@ import {
 	LoginFormSchema,
 	type LoginFormState,
 } from "@/app/lib/auth/definitions";
+import { createSession } from "@/app/lib/cookie/session";
 
 export async function handleSubmit(state: LoginFormState, formData: FormData) {
 	const validatedFields = LoginFormSchema.safeParse({
@@ -13,6 +14,7 @@ export async function handleSubmit(state: LoginFormState, formData: FormData) {
 	if (!validatedFields.success) {
 		return {
 			errors: validatedFields.error.flatten().fieldErrors,
+			message: "Erro ao validar campos antes do envio",
 		};
 	}
 
@@ -26,5 +28,6 @@ export async function handleSubmit(state: LoginFormState, formData: FormData) {
 	});
 
 	const result = await response.json();
+	createSession(result.userId); // Cria a sessão do usuário no cookie
 	console.log(result);
 }
