@@ -5,6 +5,7 @@ import helmet from "@fastify/helmet";
 // import { userRoutes } from "./routes/get-user-DEPRECATED/user";
 import loginUserRoutes from "./routes/login-user/login";
 import createUserRoutes from "./routes/create-user/register";
+import createProductRoutes from "./routes/create-product/createProduct";
 
 const fastify = Fastify({ logger: true });
 
@@ -14,6 +15,7 @@ fastify.register(cors, { origin: true });
 // fastify.register(userRoutes);
 fastify.register(loginUserRoutes);
 fastify.register(createUserRoutes);
+fastify.register(createProductRoutes);
 
 const start = async () => {
 	try {

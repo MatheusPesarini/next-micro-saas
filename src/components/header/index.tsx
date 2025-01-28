@@ -1,18 +1,38 @@
+import { verifySession } from "@/app/lib/cookie/dal";
 import Link from "next/link";
 
-export default function Header() {
+export default async function Header() {
+	const session = await verifySession();
+	const userRole = session?.userRole;
+
 	return (
 		<header className="flex py-2 px-4 bg-gray-800 text-white">
 			<div className="flex items-center justify-between w-full max-w-7xl mx-auto">
 				<h1>Teste</h1>
 				<nav>
 					<ul className="flex space-x-4">
-						<li>
-							<Link href={"/register"}>Cadastro</Link>
-						</li>
-						<li>
-							<Link href={"/login"}>Login</Link>
-						</li>
+						{userRole === "admin" ? (
+							<>
+								<li>
+									<Link href={"/dashboard"}>Admin Dashboard</Link>
+								</li>
+							</>
+						) : userRole === "user" ? (
+							<>
+								<li>
+									<Link href={"/dashboard"}>Dashboard</Link>
+								</li>
+							</>
+						) : (
+							<>
+								<li>
+									<Link href={"/register"}>Cadastro</Link>
+								</li>
+								<li>
+									<Link href={"/login"}>Login</Link>
+								</li>
+							</>
+						)}
 					</ul>
 				</nav>
 			</div>
