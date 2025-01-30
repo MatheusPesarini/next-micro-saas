@@ -35,10 +35,10 @@ export default async function createProductRoutes(fastify: FastifyInstance) {
 			});
 
 			//reply.redirect("/", 303);
-			reply.send({ message: "Usuário logado com sucesso" });
+			reply.send({ message: "Produto criado com sucesso" });
 		} catch (error) {
 			fastify.log.error(error);
-			reply.status(500).send({ error: "Erro ao fazer login" });
+			reply.status(500).send({ error: "Erro ao criar produto" });
 		}
 	});
 }

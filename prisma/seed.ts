@@ -15,6 +15,18 @@ async function main() {
 			password: "password",
 		},
 	})
+
+	const product = await prisma.product.upsert({
+		where: {
+			id: "1",
+		},
+		update: {},
+		create: {
+			name: "Test Product",
+			price: 100,
+			quantity: 10,
+		},
+	})
 	console.log(user)
 }
 main()
