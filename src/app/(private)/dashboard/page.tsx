@@ -1,6 +1,6 @@
 import AdminDashboard from "@/components/adminDashboard/page";
-import UserDashboard from "@/components/userDashboard/page";
-import { verifySession } from "../lib/cookie/dal";
+import UserDashboard from "@/app/(private)/userDashboard/page";
+import { verifySession } from "@/app/lib/cookie/dal";
 import { redirect } from "next/navigation";
 
 export default async function Dashboard() {

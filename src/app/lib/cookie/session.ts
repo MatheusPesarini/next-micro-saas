@@ -19,6 +19,15 @@ export async function decrypt(session: string | undefined = "") {
 		const { payload } = await jwtVerify(session, encodedKey, {
 			algorithms: ["HS256"],
 		});
+
+		// Verifique se o token expirou
+		const now = Math.floor(Date.now() / 1000);
+		if (payload.exp && payload.exp < now) {
+			console.log("Token expirado");
+			deleteSession();
+			return null;
+		}
+
 		return payload as SessionPayload;
 	} catch (error) {
 		console.log("Failed to verify session");

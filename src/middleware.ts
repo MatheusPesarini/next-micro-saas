@@ -1,39 +1,61 @@
-import { type NextRequest, NextResponse } from 'next/server'
-import { decrypt } from './app/lib/cookie/session'
-import { cookies } from 'next/headers'
- 
-// 1. Specify protected and public routes
-const protectedRoutes = ['/profile']
-const publicRoutes = ['/login', '/register', '/']
- 
+import { type NextRequest, NextResponse } from "next/server";
+import { decrypt } from "./app/lib/cookie/session";
+import { cookies } from "next/headers";
+import { verifySession } from "./app/lib/cookie/dal";
+
+const protectedRoutes = ["/profile"];
+const publicRoutes = [
+	{ path: "/login", whenAuthenticated: "redirect" },
+	{
+		path: "/register",
+		whenAuthenticated: "redirect",
+	},
+] as const;
+
+const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/register";
+
 export default async function middleware(req: NextRequest) {
-  // 2. Check if the current route is protected or public
-  const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
-  const isPublicRoute = publicRoutes.includes(path)
- 
-  // 3. Decrypt the session from the cookie
-  const cookie = (await cookies()).get('session')?.value
-  const session = await decrypt(cookie)
- 
-  // 4. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session?.userId) {
-    return NextResponse.redirect(new URL('/login', req.nextUrl))
-  }
- 
-  // 5. Redirect to /dashboard if the user is authenticated
-  if (
-    isPublicRoute &&
-    session?.userId &&
-    !req.nextUrl.pathname.startsWith('/profile')
-  ) {
-    return NextResponse.redirect(new URL('/profile', req.nextUrl))
-  }
- 
-  return NextResponse.next()
+	const path = req.nextUrl.pathname;
+	const publicRoute = publicRoutes.find((route) => route.path === path);
+	const authToken = (await cookies()).get("session")?.value;
+	const session = await decrypt(authToken);
+
+	if (!session && publicRoute) {
+		return NextResponse.next();
+	}
+
+	if (!session && !publicRoute) {
+		const redirectUrl = req.nextUrl.clone();
+
+		redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
+
+		return NextResponse.redirect(redirectUrl);
+	}
+
+	if (session && publicRoute && publicRoute.whenAuthenticated === "redirect") {
+		const redirectUrl = req.nextUrl.clone();
+
+		redirectUrl.pathname = "/";
+
+		return NextResponse.redirect(redirectUrl);
+	}
+
+	if (session && !publicRoute) {
+		verifySession();
+	}
+
+	return NextResponse.next();
 }
- 
-// Routes Middleware should not run on
+
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-}
+	matcher: [
+		/*
+		 * Match all request paths except for the ones starting with:
+		 * - api (API routes)
+		 * - _next/static (static files)
+		 * - _next/image (image optimization files)
+		 * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+		 */
+		"/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+	],
+};

@@ -1,6 +1,6 @@
 "use client";
 
-import { handleSubmit } from "../actions/auth/register";
+import { handleSubmit } from "../../actions/auth/register";
 import { useActionState } from "react";
 
 export default function Register() {
