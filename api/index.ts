@@ -1,21 +1,35 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
-import helmet from "@fastify/helmet";
+import helmet, { fastifyHelmet } from "@fastify/helmet";
 
-// import { userRoutes } from "./routes/get-user-DEPRECATED/user";
+// import { getUserRoutes } from "./routes/get-user-DEPRECATED/user";
 import loginUserRoutes from "./routes/login-user/login";
 import createUserRoutes from "./routes/create-user/register";
+import deleteUserRoutes from "./routes/delete-user/deleteUser";
+import logoutRoutes from "./routes/logout/logout";
+import updateProfileRoutes from "./routes/update-profile/updateProfile";
+
 import createProductRoutes from "./routes/create-product/createProduct";
+import getProductRoutes from "./routes/get-product/getProduct";
+import deleteProductRoutes from "./routes/delete-product/deleteProduct";
+import updateProductRoutes from "./routes/update-product/updateProduct";
 
 const fastify = Fastify({ logger: true });
 
 fastify.register(helmet);
 fastify.register(cors, { origin: true });
 
-// fastify.register(userRoutes);
+// fastify.register(getUserRoutes);
 fastify.register(loginUserRoutes);
 fastify.register(createUserRoutes);
+fastify.register(deleteUserRoutes);
+fastify.register(logoutRoutes);
+fastify.register(updateProfileRoutes);
+
 fastify.register(createProductRoutes);
+fastify.register(getProductRoutes);
+fastify.register(deleteProductRoutes);
+fastify.register(updateProductRoutes);
 
 const start = async () => {
 	try {
