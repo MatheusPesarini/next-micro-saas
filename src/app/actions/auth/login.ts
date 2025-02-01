@@ -2,7 +2,6 @@ import {
 	LoginFormSchema,
 	type LoginFormState,
 } from "@/app/lib/auth/definitions";
-import { createUserSession } from "@/app/lib/cookie/session";
 
 export async function handleSubmit(state: LoginFormState, formData: FormData) {
 	const validatedFields = LoginFormSchema.safeParse({
@@ -28,6 +27,5 @@ export async function handleSubmit(state: LoginFormState, formData: FormData) {
 	});
 
 	const result = await response.json();
-	createUserSession(result.userId); // Cria a sessão do usuário no cookie
 	console.log(result);
 }

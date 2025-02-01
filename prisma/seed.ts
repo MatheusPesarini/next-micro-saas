@@ -25,6 +25,7 @@ async function main() {
 			name: "Test Product",
 			price: 100,
 			quantity: 10,
+			category: "Test Category",
 		},
 	})
 	console.log(user)

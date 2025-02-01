@@ -1,7 +1,9 @@
 import type { FastifyInstance } from "fastify";
+import { FastifyCookie } from "@fastify/cookie"
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import argon2 from "argon2";
+import { createUserSession } from "@/app/lib/cookie/session";
 
 const prisma = new PrismaClient();
 
@@ -39,6 +41,16 @@ export default async function loginUserRoutes(fastify: FastifyInstance) {
 				reply.status(401).send({ error: "Senha inválida" });
 				return;
 			}
+
+			const sessionToken = await createUserSession(user.id);
+
+			reply.setCookie("session", sessionToken, {
+				httpOnly: true,
+				secure: true,
+				path: "/",
+				maxAge: 604800, // 7 dias em segundos
+				sameSite: "lax",
+			});
 
 			//reply.redirect("/", 303);
 			reply.send({ message: "Usuário logado com sucesso" });
