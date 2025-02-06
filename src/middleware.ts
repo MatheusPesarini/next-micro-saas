@@ -18,6 +18,7 @@ const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
 export default async function middleware(req: NextRequest) {
 	const path = req.nextUrl.pathname;
 	const publicRoute = publicRoutes.find((route) => route.path === path);
+	const cookieStore = await cookies();
 	const authToken = (await cookies()).get("session")?.value;
 	const session = await decrypt(authToken);
 

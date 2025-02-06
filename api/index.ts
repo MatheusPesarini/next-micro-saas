@@ -1,6 +1,7 @@
 import Fastify from "fastify";
+import fastifyCookie from "@fastify/cookie";
 import cors from "@fastify/cors";
-import helmet, { fastifyHelmet } from "@fastify/helmet";
+import helmet from "@fastify/helmet";
 
 // import { getUserRoutes } from "./routes/get-user-DEPRECATED/user";
 import loginUserRoutes from "./routes/login-user/login";
@@ -15,6 +16,12 @@ import deleteProductRoutes from "./routes/delete-product/deleteProduct";
 import updateProductRoutes from "./routes/update-product/updateProduct";
 
 const fastify = Fastify({ logger: true });
+
+// Registre o plugin @fastify/cookie
+fastify.register(fastifyCookie, {
+  secret: process.env.COOKIE_SECRET, // Use uma chave secreta para assinar os cookies
+  parseOptions: {} // Opções de análise de cookies
+});
 
 fastify.register(helmet);
 fastify.register(cors, { origin: true });

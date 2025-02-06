@@ -1,5 +1,4 @@
 import type { FastifyInstance } from "fastify";
-import { FastifyCookie } from "@fastify/cookie"
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import argon2 from "argon2";

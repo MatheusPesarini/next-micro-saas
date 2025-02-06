@@ -14,7 +14,7 @@ export default function Register() {
 					type="text"
 					placeholder="Digite seu nome"
 					name="name"
-					className="text-black"
+					className="text-black bg-amber-50"
 				/>
 				{state?.errors?.name && <p>{state.errors.name}</p>}
 
@@ -22,7 +22,7 @@ export default function Register() {
 					type="email"
 					placeholder="Digite seu e-mail"
 					name="email"
-					className="text-black"
+					className="text-black bg-amber-50"
 				/>
 				{state?.errors?.email && <p>{state.errors.email}</p>}
 
@@ -30,7 +30,7 @@ export default function Register() {
 					type="password"
 					placeholder="Digite sua senha"
 					name="password"
-					className="text-black"
+					className="text-black bg-amber-50"
 				/>
 				{state?.errors?.password && (
 					<div>
