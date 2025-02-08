@@ -1,5 +1,6 @@
 import { verifySession } from "@/app/lib/cookie/dal";
 import Link from "next/link";
+import LogoutButton from "../logoutButton/page";
 
 export default async function Header() {
 	const session = await verifySession();
@@ -16,11 +17,17 @@ export default async function Header() {
 								<li>
 									<Link href={"/dashboard"}>Admin Dashboard</Link>
 								</li>
+								<li>
+									<LogoutButton />
+								</li>
 							</>
 						) : userRole === "user" ? (
 							<>
 								<li>
 									<Link href={"/dashboard"}>Dashboard</Link>
+								</li>
+								<li>
+									<LogoutButton />
 								</li>
 							</>
 						) : (

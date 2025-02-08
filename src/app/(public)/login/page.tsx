@@ -2,9 +2,19 @@
 
 import { handleSubmit } from "../../actions/auth/login";
 import { useActionState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Login() {
+	const router = useRouter();
 	const [state, action, pending] = useActionState(handleSubmit, undefined);
+
+	useEffect(() => {
+		if (state?.sucess) {
+			router.push("/dashboard");
+			router.refresh();
+		}
+	}, [state, router]);
 
 	return (
 		<div>

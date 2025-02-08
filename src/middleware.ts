@@ -17,10 +17,14 @@ const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
 
 export default async function middleware(req: NextRequest) {
 	const path = req.nextUrl.pathname;
+	console.log("Verificando rota:", path);
 	const publicRoute = publicRoutes.find((route) => route.path === path);
 	const cookieStore = await cookies();
-	const authToken = (await cookies()).get("session")?.value;
+  const authToken = req.cookies.get("session")?.value;
 	const session = await decrypt(authToken);
+
+	console.log("Token encontrado no cookie:", authToken);
+  console.log("Resultado da decodificação:", session);
 
 	if (!session && publicRoute) {
 		return NextResponse.next();

@@ -1,16 +1,18 @@
 "use client";
 
-export default function LogoutButton() {
-	const handleLogout = async () => {
-		const response = await fetch("/logout", {
-			method: "POST",
-		});
+import { handleSubmit } from "@/app/actions/auth/logout";
+import { useRouter } from "next/navigation";
 
-		if (response.ok) {
-			// Redirecionar para a página de login ou outra página apropriada
-			window.location.href = "/login";
-		} else {
-			console.error("Erro ao fazer logout");
+export default function LogoutButton() {
+	const router = useRouter();
+
+	const handleLogout = async () => {
+		try {
+			await handleSubmit();
+			router.refresh();
+			router.push("/login");
+		} catch (error) {
+			console.error('Erro ao fazer login', error);
 		}
 	};
 
