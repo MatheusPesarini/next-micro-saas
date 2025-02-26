@@ -4,22 +4,21 @@
 
 - [x] Inicializar um novo projeto Next.js.
 - [x] Configurar TypeScript no projeto.
-- [ ] Instalar Tailwind CSS e configurar o arquivo de configuração `tailwind.config.js`.
+- [x] Instalar Tailwind CSS e configurar o arquivo de configuração `tailwind.config.js`.
 - [x] Configurar Prisma para conectar ao banco de dados PostgreSQL.
 - [x] Criar variáveis de ambiente (`.env`) para armazenar credenciais e URLs do banco de dados.
 
 ## 2. Definição do Banco de Dados
 
-- [ ] Criar modelos no `schema.prisma` de acordo com as necessidades do SaaS (por exemplo, usuários, assinaturas, produtos).
-- [ ] Executar a migração do banco de dados com o comando `npx prisma migrate dev`.
-- [ ] Configurar `prisma studio` para visualizar e manipular dados do banco de dados local.
+- [x] Criar modelos no `schema.prisma` de acordo com as necessidades do SaaS (por exemplo, usuários, assinaturas, produtos).
+- [x] Executar a migração do banco de dados com o comando `npx prisma migrate dev`.
 
 ## 3. Autenticação de Usuário
 
-- [ ] Integrar autenticação de usuário usando bibliotecas como NextAuth.js ou Auth0.
-- [ ] Criar o modelo de usuário em Prisma e adicionar campos necessários (nome, email, etc.).
-- [ ] Configurar páginas de login e registro com validação de formulário.
-- [ ] Implementar proteção de rotas para autenticação.
+- [~] Integrar autenticação de usuário usando bibliotecas como NextAuth.js ou Auth0.
+- [x] Criar o modelo de usuário em Prisma e adicionar campos necessários (nome, email, etc.).
+- [~] Configurar páginas de login e registro com validação de formulário.
+- [x] Implementar proteção de rotas para autenticação.
 
 ## 4. Painel Administrativo
 

@@ -1,3 +1,5 @@
+"use server";
+
 import type { FastifyInstance } from "fastify";
 
 export default async function logoutRoutes(fastify: FastifyInstance) {

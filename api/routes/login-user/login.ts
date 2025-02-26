@@ -1,3 +1,5 @@
+"use server";
+
 import type { FastifyInstance } from "fastify";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
@@ -49,13 +51,12 @@ export default async function loginUserRoutes(fastify: FastifyInstance) {
 				path: "/",
 				maxAge: 604800, // 7 dias em segundos
 				sameSite: "lax",
-				domain: "localhost"
+				domain: "localhost",
 			});
 
 			console.log("Cookie definido com token:", sessionToken);
 
-			reply.redirect("/", 303);
-			// reply.send({ message: "Usuário logado com sucesso" });
+			reply.send({ message: "Usuário logado com sucesso" });
 		} catch (error) {
 			fastify.log.error(error);
 			reply.status(500).send({ error: "Erro ao fazer login" });

@@ -6,6 +6,8 @@ import {
 } from "@/app/lib/auth/definitions";
 
 export async function handleSubmit(state: LoginFormState, formData: FormData) {
+  console.log("Executando handleSubmit no servidor");
+
 	const validatedFields = LoginFormSchema.safeParse({
 		email: formData.get("email") as string,
 		password: formData.get("password") as string,
@@ -41,6 +43,4 @@ export async function handleSubmit(state: LoginFormState, formData: FormData) {
 			message: "Erro ao fazer login",
 		}
 	}
-
-
 }

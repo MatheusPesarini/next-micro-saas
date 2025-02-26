@@ -1,8 +1,10 @@
+"use server";
+
 import type { FastifyInstance } from "fastify";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 const createProductSchema = z.object({
 	name: z.string(),
