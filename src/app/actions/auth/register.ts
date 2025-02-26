@@ -3,7 +3,7 @@
 import {
 	RegisterFormSchema,
 	type RegisterFormState,
-} from "@/app/lib/auth/definitions";
+} from "@/lib/auth/definitions";
 
 export async function handleSubmit(
 	state: RegisterFormState,

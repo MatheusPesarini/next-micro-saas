@@ -1,12 +1,9 @@
 // "use server";
 
-import {
-	LoginFormSchema,
-	type LoginFormState,
-} from "@/app/lib/auth/definitions";
+import { LoginFormSchema, type LoginFormState } from "@/lib/auth/definitions";
 
 export async function handleSubmit(state: LoginFormState, formData: FormData) {
-  console.log("Executando handleSubmit no servidor");
+	console.log("Executando handleSubmit no servidor");
 
 	const validatedFields = LoginFormSchema.safeParse({
 		email: formData.get("email") as string,
@@ -41,6 +38,6 @@ export async function handleSubmit(state: LoginFormState, formData: FormData) {
 	} catch (error) {
 		return {
 			message: "Erro ao fazer login",
-		}
+		};
 	}
 }

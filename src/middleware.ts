@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { decrypt } from "./app/lib/cookie/session";
+import { decrypt } from "./lib/cookie/session";
 import { cookies } from "next/headers";
-import { verifySession } from "./app/lib/cookie/dal";
+import { verifySession } from "./lib/cookie/dal";
 
 const protectedRoutes = ["/dashboard"];
 const publicRoutes = [
@@ -20,11 +20,11 @@ export default async function middleware(req: NextRequest) {
 	console.log("Verificando rota:", path);
 	const publicRoute = publicRoutes.find((route) => route.path === path);
 	const cookieStore = await cookies();
-  const authToken = req.cookies.get("session")?.value;
+	const authToken = req.cookies.get("session")?.value;
 	const session = await decrypt(authToken);
 
 	console.log("Token encontrado no cookie:", authToken);
-  console.log("Resultado da decodificação:", session);
+	console.log("Resultado da decodificação:", session);
 
 	if (!session && publicRoute) {
 		return NextResponse.next();
@@ -36,7 +36,12 @@ export default async function middleware(req: NextRequest) {
 		return NextResponse.redirect(redirectUrl);
 	}
 
-	if (session && publicRoute && 'whenAuthenticated' in publicRoute && publicRoute.whenAuthenticated === "redirect") {
+	if (
+		session &&
+		publicRoute &&
+		"whenAuthenticated" in publicRoute &&
+		publicRoute.whenAuthenticated === "redirect"
+	) {
 		const redirectUrl = req.nextUrl.clone();
 		redirectUrl.pathname = "/";
 		return NextResponse.redirect(redirectUrl);

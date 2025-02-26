@@ -1,4 +1,4 @@
-import { verifySession } from "@/app/lib/cookie/dal";
+import { verifySession } from "@/lib/cookie/dal";
 import Link from "next/link";
 import LogoutButton from "../logoutButton/page";
 
