@@ -12,6 +12,7 @@ const createProductSchema = z.object({
 	quantity: z.number(),
 	description: z.string().optional(),
 	image: z.string().optional(),
+	category: z.string(),
 });
 
 export default async function createProductRoutes(fastify: FastifyInstance) {
@@ -22,8 +23,7 @@ export default async function createProductRoutes(fastify: FastifyInstance) {
 			reply.status(400).send({ error: "Dados inválidos" });
 			return;
 		}
-
-		const { name, price, quantity, description, image } = result.data;
+		const { name, price, quantity, description, image, category } = result.data;
 
 		try {
 			const product = await prisma.product.create({
@@ -32,7 +32,7 @@ export default async function createProductRoutes(fastify: FastifyInstance) {
 					price,
 					quantity,
 					description,
-					image,
+					category,
 				},
 			});
 
