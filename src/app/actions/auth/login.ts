@@ -1,6 +1,7 @@
-// "use server";
+"use server";
 
 import { LoginFormSchema, type LoginFormState } from "@/lib/auth/definitions";
+import { loginUser } from "@/lib/auth/loginUser";
 
 export async function handleSubmit(state: LoginFormState, formData: FormData) {
 	console.log("Executando handleSubmit no servidor");
@@ -18,26 +19,11 @@ export async function handleSubmit(state: LoginFormState, formData: FormData) {
 		};
 	}
 
-	try {
-		const response = await fetch("http://localhost:3001/login", {
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(validatedFields.data),
-		});
+	const user = await loginUser({ data: validatedFields.data });
 
-		const result = await response.json();
-
-		if (!response.ok) {
-			throw new Error(result.error);
-		}
-
-		return { sucess: true };
-	} catch (error) {
+	if ("message" in user) {
 		return {
-			message: "Erro ao fazer login",
+			message: user.message,
 		};
 	}
 }
