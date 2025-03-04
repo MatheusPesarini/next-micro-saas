@@ -1,18 +1,12 @@
-// "use server";
+"use server";
 
-import {
-	RegisterFormSchema,
-	type RegisterFormState,
-} from "@/lib/auth/definitions";
+import { RegisterFormSchema, type RegisterFormState } from "@/lib/auth/definitions";
 
-export async function handleSubmit(
-	state: RegisterFormState,
-	formData: FormData,
-) {
+export async function handleSubmit(currentState: RegisterFormState, data: FormData) {
 	const validatedFields = RegisterFormSchema.safeParse({
-		name: formData.get("name") as string,
-		email: formData.get("email") as string,
-		password: formData.get("password") as string,
+		name: data.get("name") as string,
+		email: data.get("email") as string,
+		password: data.get("password") as string,
 	});
 
 	// Se os campos não forem válidos, retornar os erros antes de fazer a requisição

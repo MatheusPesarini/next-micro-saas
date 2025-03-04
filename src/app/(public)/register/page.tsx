@@ -4,12 +4,12 @@ import { handleSubmit } from "../../actions/auth/register";
 import { useActionState } from "react";
 
 export default function Register() {
-	const [state, action, pending] = useActionState(handleSubmit, undefined);
+	const [state, formAction] = useActionState(handleSubmit, { errors: {} });
 
 	return (
 		<div>
 			<h1>Registro</h1>
-			<form action={action} className="flex flex-col items-center">
+			<form className="flex flex-col items-center" action={formAction}>
 				<input
 					type="text"
 					placeholder="Digite seu nome"
@@ -43,9 +43,7 @@ export default function Register() {
 					</div>
 				)}
 
-				<button type="submit" disabled={pending}>
-					Cadastrar
-				</button>
+				<button type="submit">Cadastrar</button>
 			</form>
 		</div>
 	);
