@@ -3,12 +3,13 @@
 import { LoginFormSchema, type LoginFormState } from "@/lib/auth/definitions";
 import { loginUser } from "@/lib/auth/loginUser";
 
-export async function handleSubmit(state: LoginFormState, formData: FormData) {
-	console.log("Executando handleSubmit no servidor");
-
+export async function handleSubmit(
+	currentState: LoginFormState,
+	data: FormData,
+) {
 	const validatedFields = LoginFormSchema.safeParse({
-		email: formData.get("email") as string,
-		password: formData.get("password") as string,
+		email: data.get("email") as string,
+		password: data.get("password") as string,
 	});
 
 	// Se os campos não forem válidos, retornar os erros antes de fazer a requisição
@@ -19,11 +20,21 @@ export async function handleSubmit(state: LoginFormState, formData: FormData) {
 		};
 	}
 
-	const user = await loginUser({ data: validatedFields.data });
+	const result = await loginUser(validatedFields.data);
 
-	if ("message" in user) {
+	if (!result.success) {
+		// Retorna erro para o formulário, em vez de redirecionar
 		return {
-			message: user.message,
+			message: result.message,
+			errors: {},
 		};
 	}
+
+	console.log(result.data);
+
+	return {
+		success: true,
+		message: "Login feito com sucesso",
+		data: result.data,
+	};
 }

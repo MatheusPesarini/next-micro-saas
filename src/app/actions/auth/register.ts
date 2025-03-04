@@ -1,8 +1,16 @@
 "use server";
 
-import { RegisterFormSchema, type RegisterFormState } from "@/lib/auth/definitions";
+import {
+	RegisterFormSchema,
+	type RegisterFormState,
+} from "@/lib/auth/definitions";
+import { redirect } from "next/navigation";
+import { registerUser } from "@/lib/auth/registerUser";
 
-export async function handleSubmit(currentState: RegisterFormState, data: FormData) {
+export async function handleSubmit(
+	currentState: RegisterFormState,
+	data: FormData,
+) {
 	const validatedFields = RegisterFormSchema.safeParse({
 		name: data.get("name") as string,
 		email: data.get("email") as string,
@@ -16,15 +24,17 @@ export async function handleSubmit(currentState: RegisterFormState, data: FormDa
 		};
 	}
 
-	const response = await fetch("http://localhost:3001/register", {
-		method: "POST",
-		cache: "no-cache",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(validatedFields.data),
-	});
+	const result = await registerUser(validatedFields.data);
 
-	const result = await response.json();
-	console.log(result);
+	if (!result.success) {
+		// Retorna erro para o formulário, em vez de redirecionar
+		return {
+			message: result.message,
+			errors: {},
+		};
+	}
+
+	console.log(result.data);
+
+	redirect("/login");
 }

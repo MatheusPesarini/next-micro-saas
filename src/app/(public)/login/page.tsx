@@ -7,10 +7,10 @@ import { useEffect } from "react";
 
 export default function Login() {
 	const router = useRouter();
-	const [state, action, pending] = useActionState(handleSubmit, undefined);
+	const [state, formAction] = useActionState(handleSubmit, { errors: {}, message: "" });
 
 	useEffect(() => {
-		if (state?.sucess) {
+		if (state?.success) {
 			router.push("/dashboard");
 			router.refresh();
 		}
@@ -19,7 +19,7 @@ export default function Login() {
 	return (
 		<div>
 			<h1>Login</h1>
-			<form action={action} className="flex flex-col items-center">
+			<form action={formAction} className="flex flex-col items-center">
 				<input
 					type="email"
 					placeholder="Digite seu e-mail"
@@ -45,9 +45,7 @@ export default function Login() {
 					</div>
 				)}
 
-				<button type="submit" disabled={pending}>
-					Logar
-				</button>
+				<button type="submit">Logar</button>
 			</form>
 		</div>
 	);
