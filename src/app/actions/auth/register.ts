@@ -3,12 +3,11 @@
 import {
 	RegisterFormSchema,
 	type RegisterFormState,
-} from "@/lib/auth/definitions";
+} from "@/app/actions/definitions";
 import { redirect } from "next/navigation";
-import { registerUser } from "@/lib/auth/registerUser";
 
-export async function handleSubmit(
-	currentState: RegisterFormState,
+export async function submitAction(
+	prevState: RegisterFormState,
 	data: FormData,
 ) {
 	const validatedFields = RegisterFormSchema.safeParse({
@@ -17,24 +16,28 @@ export async function handleSubmit(
 		password: data.get("password") as string,
 	});
 
-	// Se os campos não forem válidos, retornar os erros antes de fazer a requisição
 	if (!validatedFields.success) {
 		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-		};
-	}
-
-	const result = await registerUser(validatedFields.data);
-
-	if (!result.success) {
-		// Retorna erro para o formulário, em vez de redirecionar
-		return {
-			message: result.message,
+			message: "Falha ao validar dados registro",
 			errors: {},
 		};
 	}
 
-	console.log(result.data);
+	const result = await fetch("http://localhost:3001/register", {
+		method: "POST",
+		cache: "no-cache",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(validatedFields.data),
+	});
+
+	if (!result.ok) {
+		return {
+			message: "Falha ao fazer registro",
+			errors: {},
+		};
+	}
 
 	redirect("/login");
 }

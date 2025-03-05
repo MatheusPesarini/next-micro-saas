@@ -1,10 +1,18 @@
 "use client";
 
-import { handleSubmit } from "../../actions/auth/register";
+import { submitAction } from "@/app/actions/auth/register";
 import { useActionState } from "react";
 
+const initialState = {
+	errors: {},
+	message: "",
+};
+
 export default function Register() {
-	const [state, formAction] = useActionState(handleSubmit, { errors: {} });
+	const [state, formAction, isPending] = useActionState(
+		submitAction,
+		initialState,
+	);
 
 	return (
 		<div>
@@ -16,7 +24,6 @@ export default function Register() {
 					name="name"
 					className="text-black bg-amber-50"
 				/>
-				{state?.errors?.name && <p>{state.errors.name}</p>}
 
 				<input
 					type="email"
@@ -24,7 +31,6 @@ export default function Register() {
 					name="email"
 					className="text-black bg-amber-50"
 				/>
-				{state?.errors?.email && <p>{state.errors.email}</p>}
 
 				<input
 					type="password"
@@ -32,18 +38,11 @@ export default function Register() {
 					name="password"
 					className="text-black bg-amber-50"
 				/>
-				{state?.errors?.password && (
-					<div>
-						<p>A senha deve ter:</p>
-						<ul>
-							{state.errors.password.map((error) => (
-								<li key={error}>- {error}</li>
-							))}
-						</ul>
-					</div>
-				)}
 
-				<button type="submit">Cadastrar</button>
+				{state?.message && <p>{state.message}</p>}
+				<button type="submit" disabled={isPending}>
+					Cadastrar
+				</button>
 			</form>
 		</div>
 	);

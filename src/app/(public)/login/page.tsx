@@ -1,13 +1,18 @@
 "use client";
 
-import { handleSubmit } from "../../actions/auth/login";
+import { submitAction } from "@/app/actions/auth/login";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+const initialState = {
+	errors: {},
+	message: "",
+};
+
 export default function Login() {
 	const router = useRouter();
-	const [state, formAction] = useActionState(handleSubmit, { errors: {}, message: "" });
+	const [state, formAction, isPending] = useActionState(submitAction, initialState);
 
 	useEffect(() => {
 		if (state?.success) {
@@ -26,7 +31,6 @@ export default function Login() {
 					name="email"
 					className="text-black bg-amber-50"
 				/>
-				{state?.errors?.email && <p>{state.errors.email}</p>}
 
 				<input
 					type="password"
@@ -34,18 +38,11 @@ export default function Login() {
 					name="password"
 					className="text-black bg-amber-50"
 				/>
-				{state?.errors?.password && (
-					<div>
-						<p>A senha deve ter:</p>
-						<ul>
-							{state.errors.password.map((error) => (
-								<li key={error}>- {error}</li>
-							))}
-						</ul>
-					</div>
-				)}
-
-				<button type="submit">Logar</button>
+				
+				{state?.message && <p>{state.message}</p>}
+				<button type="submit" disabled={isPending}>
+					Logar
+				</button>
 			</form>
 		</div>
 	);

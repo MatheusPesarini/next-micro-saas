@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
-import type { SessionPayload } from "../auth/definitions";
+import type { SessionPayload } from "../../app/actions/definitions";
 import { cookies } from "next/headers";
 
 const secretKey = process.env.SESSION_SECRET;

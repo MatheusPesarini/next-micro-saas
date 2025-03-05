@@ -1,40 +1,41 @@
 "use server";
 
-import { LoginFormSchema, type LoginFormState } from "@/lib/auth/definitions";
-import { loginUser } from "@/lib/auth/loginUser";
+import {
+	LoginFormSchema,
+	type LoginFormState,
+} from "@/app/actions/definitions";
 
-export async function handleSubmit(
-	currentState: LoginFormState,
-	data: FormData,
-) {
+export async function submitAction(prevState: LoginFormState, data: FormData) {
 	const validatedFields = LoginFormSchema.safeParse({
 		email: data.get("email") as string,
 		password: data.get("password") as string,
 	});
 
-	// Se os campos não forem válidos, retornar os erros antes de fazer a requisição
 	if (!validatedFields.success) {
 		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-			message: "Erro ao validar campos antes do envio",
-		};
-	}
-
-	const result = await loginUser(validatedFields.data);
-
-	if (!result.success) {
-		// Retorna erro para o formulário, em vez de redirecionar
-		return {
-			message: result.message,
+			message: "Falha ao validar dados de login",
 			errors: {},
 		};
 	}
 
-	console.log(result.data);
+	const result = await fetch("http://localhost:3001/login", {
+		method: "POST",
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(validatedFields.data),
+	});
+
+	if (!result.ok) {
+		return {
+			message: "Erro ao fazer login",
+			errors: {},
+		};
+	}
 
 	return {
 		success: true,
 		message: "Login feito com sucesso",
-		data: result.data,
 	};
 }
