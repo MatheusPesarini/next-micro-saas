@@ -19,7 +19,7 @@ export async function submitAction(
 	if (!validatedFields.success) {
 		return {
 			message: "Falha ao validar dados registro",
-			errors: {},
+			errors: validatedFields.error.flatten().fieldErrors,
 		};
 	}
 

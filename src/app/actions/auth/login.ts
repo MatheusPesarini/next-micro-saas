@@ -13,8 +13,9 @@ export async function submitAction(prevState: LoginFormState, data: FormData) {
 
 	if (!validatedFields.success) {
 		return {
-			message: "Falha ao validar dados de login",
-			errors: {},
+			message: "Falha ao validar dados registro",
+			errors: validatedFields.error.flatten().fieldErrors,
+			success: false,
 		};
 	}
 
@@ -29,13 +30,13 @@ export async function submitAction(prevState: LoginFormState, data: FormData) {
 
 	if (!result.ok) {
 		return {
-			message: "Erro ao fazer login",
+			message: "Falha ao fazer registro",
 			errors: {},
+			success: false,
 		};
 	}
 
 	return {
 		success: true,
-		message: "Login feito com sucesso",
 	};
 }

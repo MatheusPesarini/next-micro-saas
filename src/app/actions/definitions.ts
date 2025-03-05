@@ -40,6 +40,7 @@ export type LoginFormState =
 				password?: string[];
 			};
 			message?: string;
+			success?: boolean;
 	  }
 	| undefined;
 
