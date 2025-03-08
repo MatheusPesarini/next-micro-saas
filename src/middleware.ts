@@ -1,58 +1,38 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { decrypt } from "./lib/cookie/session";
-import { cookies } from "next/headers";
-import { verifySession } from "./lib/cookie/dal";
+import { type NextRequest, NextResponse } from 'next/server';
+import { isAuthenticated } from './lib/cookie/dal';
 
-const protectedRoutes = ["/dashboard"];
+// Definir rotas protegidas e públicas
+const protectedRoutes = ['/dashboard'];
 const publicRoutes = [
-	{ path: "/" },
-	{ path: "/login", whenAuthenticated: "redirect" },
-	{
-		path: "/register",
-		whenAuthenticated: "redirect",
-	},
-] as const;
+	{ path: '/', whenAuthenticated: 'allow' },
+	{ path: '/login', whenAuthenticated: 'redirect' },
+	{ path: '/register', whenAuthenticated: 'redirect' },
+];
 
-const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
+const LOGIN_ROUTE = '/login';
+const DASHBOARD_ROUTE = '/dashboard';
 
-export default async function middleware(req: NextRequest) {
-	const path = req.nextUrl.pathname;
-	console.log("Verificando rota:", path);
+export async function middleware(request: NextRequest) {
+	const path = request.nextUrl.pathname;
+
+	// Verificar se é uma rota protegida
+	const isProtectedRoute = protectedRoutes.some(
+		(route) => path === route || path.startsWith(`${route}/`),
+	);
+
+	if (isProtectedRoute) {
+		const auth = await isAuthenticated();
+		if (!auth) {
+			return NextResponse.redirect(new URL(LOGIN_ROUTE, request.url));
+		}
+	}
+
+	// Verificar se é uma rota pública que redireciona usuários autenticados
 	const publicRoute = publicRoutes.find((route) => route.path === path);
-	const cookieStore = await cookies();
-	const authToken = req.cookies.get("session")?.value;
-	const session = await decrypt(authToken);
-
-	console.log("Token encontrado no cookie:", authToken);
-	console.log("Resultado da decodificação:", session);
-
-	if (!session && publicRoute) {
-		return NextResponse.next();
-	}
-
-	if (!session && !publicRoute) {
-		const redirectUrl = req.nextUrl.clone();
-		redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
-		return NextResponse.redirect(redirectUrl);
-	}
-
-	if (
-		session &&
-		publicRoute &&
-		"whenAuthenticated" in publicRoute &&
-		publicRoute.whenAuthenticated === "redirect"
-	) {
-		const redirectUrl = req.nextUrl.clone();
-		redirectUrl.pathname = "/";
-		return NextResponse.redirect(redirectUrl);
-	}
-
-	if (session && !publicRoute) {
-		const sessionVerification = await verifySession();
-		if (!sessionVerification.isAuth) {
-			const redirectUrl = req.nextUrl.clone();
-			redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
-			return NextResponse.redirect(redirectUrl);
+	if (publicRoute?.whenAuthenticated === 'redirect') {
+		const auth = await isAuthenticated();
+		if (auth) {
+			return NextResponse.redirect(new URL(DASHBOARD_ROUTE, request.url));
 		}
 	}
 
@@ -61,13 +41,6 @@ export default async function middleware(req: NextRequest) {
 
 export const config = {
 	matcher: [
-		/*
-		 * Match all request paths except for the ones starting with:
-		 * - api (API routes)
-		 * - _next/static (static files)
-		 * - _next/image (image optimization files)
-		 * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-		 */
-		"/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+		'/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
 	],
 };

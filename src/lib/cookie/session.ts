@@ -1,59 +1,60 @@
-import { SignJWT, jwtVerify } from "jose";
-import type { SessionPayload } from "../../app/actions/definitions";
+import { jwtVerify } from 'jose';
+import type { SessionPayload } from '../../app/actions/definitions';
 
-const secretKey = process.env.SESSION_SECRET;
+const secretKey = 'my-secret';
 const encodedKey = new TextEncoder().encode(secretKey);
 
-export async function encrypt(payload: SessionPayload) {
-	return new SignJWT(payload)
-		.setProtectedHeader({ alg: "HS256" })
-		.setIssuedAt()
-		.setExpirationTime("7d")
-		.sign(encodedKey);
-}
+// Cache manual para a função decrypt
+const tokenCache = new Map<string, SessionPayload | null>();
 
-export async function decrypt(session: string | undefined = "") {
-	try {
-		if (!session) {
-			console.log("Sessão indefinida ou vazia");
-			return null;
-		}
-
-		console.log("Token recebido:", session);
-		console.log("Chave secreta:", secretKey); // Remova em produção
-
-		const { payload } = await jwtVerify(session, encodedKey, {
-			algorithms: ["HS256"],
-		});
-
-		console.log("Payload decodificado:", payload);
-
-		// Verifique se o token expirou
-		const now = Math.floor(Date.now() / 1000);
-		if (payload.exp && payload.exp < now) {
-			console.log("Token expirado");
-			fetch("http://localhost:3001/logout", {
-				method: "POST",
-				credentials: "include",
-				cache: "no-cache",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ action: "logout" }),
-			});
-			return null;
-		}
-
-		return payload as SessionPayload;
-	} catch (error) {
-		console.log("Erro ao verificar sessão:", error);
+export async function decrypt(session: string | undefined = '') {
+	// Se o token for undefined ou vazio, retorne null
+	if (!session) {
 		return null;
 	}
-}
 
-export async function createUserSession(userId: string) {
-	const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-	const session = await encrypt({ userId, expiresAt, userRole: "user" });
-	console.log("Token gerado:", session);
-	return session;
+	// Verificar se o token já está no cache
+	if (tokenCache.has(session)) {
+		return tokenCache.get(session);
+	}
+
+	console.log('JWT decodificado - chamada real');
+
+	try {
+		// Verificar a assinatura e decodificar
+		const { payload } = await jwtVerify(session, encodedKey, {
+			algorithms: ['HS256'],
+		});
+
+		// Verificar se o token expirou
+		const now = Math.floor(Date.now() / 1000);
+		if (payload.exp && payload.exp < now) {
+			// Token expirado, tentar fazer logout silenciosamente
+			try {
+				fetch('http://localhost:3001/logout', {
+					method: 'POST',
+					credentials: 'include',
+					cache: 'no-cache',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ action: 'logout' }),
+				}).catch(() => {});
+			} catch (e) {
+				// Ignorar erros de fetch
+			}
+
+			// Armazenar no cache
+			tokenCache.set(session, null);
+			return null;
+		}
+
+		const result = payload as SessionPayload;
+
+		// Armazenar no cache
+		tokenCache.set(session, result);
+		return result;
+	} catch (error) {
+		// Armazenar no cache
+		tokenCache.set(session, null);
+		return null;
+	}
 }

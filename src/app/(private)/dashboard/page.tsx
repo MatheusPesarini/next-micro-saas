@@ -1,19 +1,16 @@
-import AdminDashboard from "@/components/adminDashboard/page";
-import UserDashboard from "@/app/(private)/userDashboard/page";
-// import { verifySession } from "@/app/lib/cookie/dal";
-import { redirect } from "next/navigation";
+import AdminDashboard from '@/app/(private)/adminDashboard/page';
+import UserDashboard from '@/app/(private)/userDashboard/page';
+import { getUserRole } from '@/lib/cookie/dal';
 
 export default async function Dashboard() {
-	// const session = await verifySession();
-	// const userRole = session?.userRole; // Assuming 'role' is part of the session object
+	// O middleware já garante que o usuário está autenticado,
+	// apenas precisamos obter seu papel
+	const userRole = await getUserRole();
 
-	// if (userRole === "admin") {
-	// 	return <AdminDashboard />;
-	// }
+	// Renderizar com base no papel
+	if (userRole === 'admin') {
+		return <AdminDashboard />;
+	}
 
-	// if (userRole === "user") {
-	// 	return <UserDashboard />;
-	// }
-
-	redirect("/login");
+	return <UserDashboard />;
 }
